@@ -1,6 +1,24 @@
+import { spawn } from 'node:child_process';
+import path from 'path';
+
+const SCRIPT_PATH = './files/script.js';
+
 const spawnChildProcess = async (args) => {
-    // Write your code here
+  const child = spawn(
+    'node',
+    [path.resolve(import.meta.dirname, SCRIPT_PATH), ...args],
+    {
+      stdio: 'inherit',
+    }
+  );
+
+  child.on('error', (err) => {
+    console.log(`child process error: ${err}`);
+  });
+
+  child.on('close', (code) => {
+    console.log(`child process exited with code ${code}`);
+  });
 };
 
-// Put your arguments in function call to test this functionality
-spawnChildProcess( /* [someArgument1, someArgument2, ...] */);
+spawnChildProcess(['someArgument1', 'someArgument2']);
